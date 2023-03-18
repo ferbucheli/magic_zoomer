@@ -1,8 +1,11 @@
+import 'dart:ui';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:magic_zoomer/views/zoomer_view.dart';
 import 'package:magic_zoomer/widgets/custom_card.dart';
 import 'package:magic_zoomer/views/object_detector_view.dart';
+import 'package:rive/rive.dart';
 
 List<CameraDescription> cameras = [];
 
@@ -34,32 +37,44 @@ class Home extends StatelessWidget {
         elevation: 0,
       ),
       body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: [
-                  ExpansionTile(
-                    title: const Text('Tools'),
-                    children: [
-                      const CustomCard(
-                        'Magic Zoomer',
-                        ZoomerView(),
-                        icon: Icons.camera_alt,
-                      ),
-                      CustomCard(
-                        'Object Detection',
-                        ObjectDetectorView(),
-                        icon: Icons.auto_awesome_mosaic,
-                      ),
-                    ],
-                  ),
-                ],
+        child: Stack(children: [
+          RiveAnimation.asset('assets/shapes.riv'),
+          Positioned.fill(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 20,
+                sigmaY: 10,
+              ),
+              child: SizedBox(),
+            ),
+          ),
+          Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  children: [
+                    ExpansionTile(
+                      title: const Text('Tools'),
+                      children: [
+                        const CustomCard(
+                          'Magic Zoomer',
+                          ZoomerView(),
+                          icon: Icons.camera_alt,
+                        ),
+                        CustomCard(
+                          'Object Detection',
+                          ObjectDetectorView(),
+                          icon: Icons.auto_awesome_mosaic,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
+        ]),
       ),
     );
   }
