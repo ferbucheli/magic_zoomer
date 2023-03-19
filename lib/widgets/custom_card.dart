@@ -16,11 +16,11 @@ class CustomCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       child: ListTile(
         leading: Icon(icon),
-        tileColor: Theme.of(context).primaryColor,
+        tileColor: Colors.transparent,
         title: Text(
           _label,
           style:
-              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         onTap: () {
           if (!featureCompleted) {

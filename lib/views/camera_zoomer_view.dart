@@ -85,7 +85,14 @@ class _CameraZoomerViewState extends State<CameraZoomerView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        iconTheme: IconThemeData(
+          color: Colors.black, //change your color here
+        ),
+        title: Text(
+          widget.title,
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: Colors.white,
         actions: [
           if (_allowPicker)
             Padding(

@@ -31,11 +31,6 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Magic Zoomer'),
-        centerTitle: true,
-        elevation: 0,
-      ),
       body: SafeArea(
         child: Stack(children: [
           RiveAnimation.asset('assets/shapes.riv'),
@@ -48,29 +43,38 @@ class Home extends StatelessWidget {
               child: SizedBox(),
             ),
           ),
-          Center(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  children: [
-                    ExpansionTile(
-                      title: const Text('Tools'),
-                      children: [
-                        const CustomCard(
-                          'Magic Zoomer',
-                          ZoomerView(),
-                          icon: Icons.camera_alt,
-                        ),
-                        CustomCard(
-                          'Object Detection',
-                          ObjectDetectorView(),
-                          icon: Icons.auto_awesome_mosaic,
-                        ),
-                      ],
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  const SizedBox(
+                      width: 500,
+                      height: 300,
+                      child: RiveAnimation.asset(
+                        'assets/title.riv',
+                        artboard: 'Main',
+                      )),
+                  ExpansionTile(
+                    title: const Text(
+                      'Tools',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
                     ),
-                  ],
-                ),
+                    children: [
+                      const CustomCard(
+                        'Magic Zoomer',
+                        ZoomerView(),
+                        icon: Icons.camera_alt,
+                      ),
+                      CustomCard(
+                        'Object Detection',
+                        ObjectDetectorView(),
+                        icon: Icons.auto_awesome_mosaic,
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),
