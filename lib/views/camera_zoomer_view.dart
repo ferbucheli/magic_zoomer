@@ -18,7 +18,9 @@ class CameraZoomerView extends StatefulWidget {
       this.text,
       required this.onImage,
       this.onScreenModeChanged,
-      this.initialDirection = CameraLensDirection.back})
+      this.initialDirection = CameraLensDirection.back,
+      required this.takePhoto,
+      required this.capturedImage})
       : super(key: key);
 
   final String title;
@@ -27,6 +29,8 @@ class CameraZoomerView extends StatefulWidget {
   final Function(InputImage inputImage, CameraController controller) onImage;
   final Function(ScreenMode mode)? onScreenModeChanged;
   final CameraLensDirection initialDirection;
+  final bool takePhoto;
+  final XFile? capturedImage;
 
   @override
   State<CameraZoomerView> createState() => _CameraZoomerViewState();
@@ -110,8 +114,8 @@ class _CameraZoomerViewState extends State<CameraZoomerView> {
             ),
         ],
       ),
-      body: _body(),
-      floatingActionButton: _floatingActionButton(),
+      body: widget.takePhoto ? photoDiplay() : _body(),
+      floatingActionButton: widget.takePhoto ? null : _floatingActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
@@ -131,6 +135,12 @@ class _CameraZoomerViewState extends State<CameraZoomerView> {
             size: 40,
           ),
         ));
+  }
+
+  Widget photoDiplay() {
+    return Image.file(
+      File(widget.capturedImage!.path),
+    );
   }
 
   Widget _body() {
@@ -167,8 +177,8 @@ class _CameraZoomerViewState extends State<CameraZoomerView> {
             scale: scale,
             child: Center(
               child: _changingCameraLens
-                  ? Center(
-                      child: const Text('Changing camera lens'),
+                  ? const Center(
+                      child: Text('Changing camera lens'),
                     )
                   : CameraPreview(_controller!),
             ),

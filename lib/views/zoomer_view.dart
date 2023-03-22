@@ -25,7 +25,8 @@ class _ZoomerViewState extends State<ZoomerView> {
   CustomPaint? _customPaint;
   String? _text;
   double _currentZoomLevel = 1.0;
-  bool isZoomed = false;
+  bool takePhoto = false;
+  late XFile? picture = null;
 
   @override
   void initState() {
@@ -44,7 +45,7 @@ class _ZoomerViewState extends State<ZoomerView> {
   @override
   Widget build(BuildContext context) {
     return CameraZoomerView(
-      title: 'Object Detector',
+      title: 'Magic Zoomer',
       customPaint: _customPaint,
       text: _text,
       onImage: (inputImage, controller) {
@@ -52,6 +53,8 @@ class _ZoomerViewState extends State<ZoomerView> {
       },
       onScreenModeChanged: _onScreenModeChanged,
       initialDirection: CameraLensDirection.back,
+      takePhoto: takePhoto,
+      capturedImage: picture,
     );
   }
 
@@ -106,11 +109,23 @@ class _ZoomerViewState extends State<ZoomerView> {
     final zoomLevel = maxObjectSize / maxPreviewSize;
     final maxZoomLevel = await controller.getMaxZoomLevel();
     final zoomFactor = pow(2, zoomLevel).clamp(1.0, maxZoomLevel);
-    if (!isZoomed) {
-      await controller.setZoomLevel(zoomFactor as double);
-      isZoomed = true;
-      print('Activo');
+
+    await controller.setZoomLevel(zoomFactor as double);
+
+    if (zoomFactor >= 2.0) {
+      await controller.stopImageStream();
+      takePhoto = true;
     }
+
+    if (takePhoto) {
+      final XFile? photo = await controller.takePicture();
+      setState(() {
+        picture = photo!;
+      });
+
+      // do something with the photo, e.g., display it in an image widget
+    }
+
     if (inputImage.inputImageData?.size != null &&
         inputImage.inputImageData?.imageRotation != null) {
       final painter = ObjectDetectorPainter(
