@@ -3,8 +3,11 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:google_mlkit_commons/google_mlkit_commons.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../main.dart';
 
@@ -98,7 +101,7 @@ class _CameraZoomerViewState extends State<CameraZoomerView> {
         ),
         backgroundColor: Colors.white,
         actions: [
-          if (_allowPicker)
+          if (_allowPicker && !widget.takePhoto)
             Padding(
               padding: EdgeInsets.only(right: 20.0),
               child: GestureDetector(
@@ -115,9 +118,38 @@ class _CameraZoomerViewState extends State<CameraZoomerView> {
         ],
       ),
       body: widget.takePhoto ? photoDiplay() : _body(),
-      floatingActionButton: widget.takePhoto ? null : _floatingActionButton(),
+      floatingActionButton:
+          widget.takePhoto ? savePhotoActionButton() : _floatingActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
+  }
+
+  void saveImage(XFile image) async {
+    if (await Permission.storage.request().isGranted) {
+      GallerySaver.saveImage(image.path).then((value) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Image Saved!'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      });
+    }
+  }
+
+  Widget savePhotoActionButton() {
+    return SizedBox(
+        height: 70.0,
+        width: 70.0,
+        child: FloatingActionButton(
+          onPressed: () {
+            saveImage(widget.capturedImage!);
+          },
+          child: const Icon(
+            Icons.save_alt,
+            size: 40,
+          ),
+        ));
   }
 
   Widget? _floatingActionButton() {
